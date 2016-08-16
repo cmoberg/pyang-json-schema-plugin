@@ -172,7 +172,38 @@ def produce_container(stmt):
 def produce_leafref(stmt):
 	# Consider using dereferencing instead?
 	logging.debug("in produce_leafref: %s %s", stmt.keyword, stmt.arg)
+	arg = qualify_name(stmt)
 	res = {}
+	return res
+
+def produce_choice(stmt):
+	logging.debug("in produce_choice: %s %s", stmt.keyword, stmt.arg)
+	arg = qualify_name(stmt)
+
+	# https://tools.ietf.org/html/rfc6020#section-7.9.2
+	res = { arg: { "oneOf": [] } }
+
+	idx = 0
+	for case in stmt.search("case"):
+		res[arg]["oneOf"].append(dict())
+		if hasattr(case, 'i_children'):
+			for ch in case.i_children:
+				if ch.keyword in producers:
+					logging.debug("keyword hit on (long version): %s %s", ch.keyword, ch.arg)
+					res[arg]["oneOf"][idx].update(producers[ch.keyword](ch))
+				else:
+					logging.debug("keyword miss on: %s %s", ch.keyword, ch.arg)
+		idx += 1
+
+	# Short ("case-less") version
+	#  https://tools.ietf.org/html/rfc6020#section-7.9.2
+	for ch in stmt.substmts:
+		logging.debug("checking on keywords with: %s %s", ch.keyword, ch.arg)
+		if ch.keyword in [ "container", "leaf", "list", "leaf-list" ]:
+			res[arg]["oneOf"].append(dict())
+			logging.debug("keyword hit on (short version): %s %s", ch.keyword, ch.arg)
+			res[arg]["oneOf"][idx].update(producers[ch.keyword](ch))
+		idx += 1
 	return res
 
 producers = {
@@ -182,6 +213,7 @@ producers = {
 	"leaf-list": 	produce_leaf_list,
 	"leaf": 		produce_leaf,
 	"leafref": 		produce_leafref,
+	"choice":		produce_choice,
 }
 
 _numeric_type_trans_tbl = {

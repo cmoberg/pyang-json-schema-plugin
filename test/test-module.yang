@@ -1,4 +1,4 @@
-	module test-module {
+module test-module {
 	namespace "urn:tester:one";
 	prefix "tmo";
 
@@ -9,67 +9,97 @@
 	organization "";
 	contact "";
 	description "";
+
 	revision 2015-05-30 {
 		description "initial";
 		reference "testing";
 	}
 
-	container simplecontainer {
-		description "";
-		leaf simpleleaf {
-			type string;
+	container topcontainer {
+		container simplecontainer {
 			description "";
+			leaf simpleleaf {
+				type string;
+				description "";
+			}
 		}
-	}
 
-	container maincontainer {
-		description "";		
-		list mainlist {
-			key first;
-
-			description "";
-
-
-			leaf first {
-				type string;
-				description "";
-			}
-			leaf second {
-				type string;
-				description "";
-			}
-			leaf third {
-				type string;
-				description "";
-			}
-
-			container containerinlist {
-				description "";
-				leaf deeperleaf {
-					type string;
-					description "";
-				}
-
-				list verydeeplist {
-					key akey;
-					description "";
-
-					leaf akey {
+		choice achoice {
+			case firstcasecase {
+				container firstcase {
+					leaf firstcaseleaf {
 						type string;
-						description "";
 					}
 				}
 			}
+			case secondcasecase {
+				container second {
+					leaf secondcaseleaf {
+						type string;
+					}
+				}
+				leaf topsecondcaseleaf {
+					type string;
+				}
+			}
+		}
 
-			list listinlist {
-				key lilkey;
-				leaf lilkey {
+		choice shallowchoice {
+			container firstcase {
+				leaf firstcaseleaf {
 					type string;
 				}
-				leaf boringleaf {
+			}
+			container second {
+				leaf seondcaseleaf {
 					type string;
 				}
-				list listinlistinlist {
+			}
+			leaf thirdbutleaf {
+				type string;
+			}
+		}
+
+		container maincontainer {
+			description "";		
+			list mainlist {
+				key first;
+
+				description "";
+
+
+				leaf first {
+					type string;
+					description "";
+				}
+				leaf second {
+					type string;
+					description "";
+				}
+				leaf third {
+					type string;
+					description "";
+				}
+
+				container containerinlist {
+					description "";
+					leaf deeperleaf {
+						type string;
+						description "";
+					}
+
+					list verydeeplist {
+						key akey;
+						description "";
+
+						leaf akey {
+							type string;
+							description "";
+						}
+					}
+				}
+
+				list listinlist {
 					key lilkey;
 					leaf lilkey {
 						type string;
@@ -77,92 +107,101 @@
 					leaf boringleaf {
 						type string;
 					}
+					list listinlistinlist {
+						key lilkey;
+						leaf lilkey {
+							type string;
+						}
+						leaf boringleaf {
+							type string;
+						}
+					}
 				}
 			}
 		}
-	}
 
-	container typetester {
-		leaf tint8 {
-			type int8;
-		}
-		leaf tuint8 {
-			type uint8;
-		}
-		leaf tint16 {
-			type int16;
-		}
-		leaf tuint16 {
-			type uint16;
-		}
-		leaf tint32 {
-			type int32;
-		}
-		leaf tuint32 {
-			type uint32;
-		}
-		leaf tint64 {
-			type int64;
-		}
-		leaf tuint64 {
-			type uint64;
-		}
-	}
-
-	container acontainer {
-		description "";
-		container subcontainer {
-			description "";
-			leaf deepleaf {
+		container typetester {
+			leaf tint8 {
+				type int8;
+			}
+			leaf tuint8 {
 				type uint8;
-				description "";
+			}
+			leaf tint16 {
+				type int16;
+			}
+			leaf tuint16 {
+				type uint16;
+			}
+			leaf tint32 {
+				type int32;
+			}
+			leaf tuint32 {
+				type uint32;
+			}
+			leaf tint64 {
+				type int64;
+			}
+			leaf tuint64 {
+				type uint64;
 			}
 		}
-	}
 
-	leaf-list aleaflist {
-		type string;
-		description "";
-	}
-
-	leaf topleaf {
-		type string;
-	}
-
-	leaf abitleaf {
-		type bits {
-			bit firstbit;
-			bit secondbit;
+		container acontainer {
+			description "";
+			container subcontainer {
+				description "";
+				leaf deepleaf {
+					type uint8;
+					description "";
+				}
+			}
 		}
-	}
 
-	container usescontainer {
-		description
-			"";
-		
-		uses imp:agroup;
-	}
+		leaf-list aleaflist {
+			type string;
+			description "";
+		}
 
-	leaf abooleanleaf {
-		type boolean;
-	}
-
-	leaf anemptyleaf {
-		type empty;
-	}
-
-	leaf aunion {
-		type union {
-			type uint32;
+		leaf topleaf {
 			type string;
 		}
-	}
 
-	leaf enumtest {
-		type enumeration {
-			enum frib;
-			enum frob;
-			enum frab;			
+		leaf abitleaf {
+			type bits {
+				bit firstbit;
+				bit secondbit;
+			}
+		}
+
+		container usescontainer {
+			description
+				"";
+			
+			uses imp:agroup;
+		}
+
+		leaf abooleanleaf {
+			type boolean;
+		}
+
+		leaf anemptyleaf {
+			type empty;
+		}
+
+		leaf aunion {
+			type union {
+				type uint32;
+				type string;
+			}
+		}
+
+		leaf enumtest {
+			type enumeration {
+				enum frib;
+				enum frob;
+				enum frab;			
+			}
 		}
 	}
 }
