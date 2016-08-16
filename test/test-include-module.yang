@@ -1,0 +1,46 @@
+module  {
+
+    namespace "urn:include-module";
+    prefix incl;
+
+    organization
+      "";
+
+    contact
+      "";
+
+    description
+      "";
+
+    revision  {
+      description
+        "";
+      reference
+        "";
+    }
+
+    container top {
+    	description
+    		"";
+    	list  {
+    		key "akey";
+    	
+    		description
+    			"";
+    	
+    		leaf akey {
+    			type string;
+    	
+    			description
+    				"";
+    		}
+
+    		leaf aleaf {
+    			type string;
+    		
+    			description
+    				"";
+    		}
+    	}
+    }
+}

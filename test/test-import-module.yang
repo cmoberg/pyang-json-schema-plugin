@@ -1,0 +1,49 @@
+module test-import-module {
+
+    namespace "urn:test-import-module";
+    prefix imp;
+
+    organization
+      "";
+
+    contact
+      "";
+
+    description
+      "";
+
+    revision 2016-08-16 {
+      description
+        "";
+      reference
+        "";
+    }
+
+    container importedcontainer {
+    	description
+    		"";
+    	leaf importedcontainerleaf {
+    		type string;
+    	
+    		description
+    			"";
+    	}
+    }
+
+    grouping agroup {
+    	container abc {
+	    	leaf apa {
+    			type string;
+    		
+    			description
+    				"";
+ 		   	}	
+	    	leaf snorp {
+    			type string;
+    		
+    			description
+    				"";
+ 		   	}	
+		}
+    }
+}
