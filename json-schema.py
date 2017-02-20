@@ -178,27 +178,25 @@ def produce_choice(stmt):
     # https://tools.ietf.org/html/rfc6020#section-7.9.2
     res = {arg: {"oneOf": []}}
 
-    idx = 0
+    oneOfs = []
     for case in stmt.search("case"):
-        res[arg]["oneOf"].append(dict())
         if hasattr(case, 'i_children'):
             for ch in case.i_children:
                 if ch.keyword in PRODUCERS:
                     logging.debug("keyword hit on (long version): %s %s", ch.keyword, ch.arg)
-                    res[arg]["oneOf"][idx].update(PRODUCERS[ch.keyword](ch))
+                    oneOfs.append(PRODUCERS[ch.keyword](ch))
                 else:
                     logging.debug("keyword miss on: %s %s", ch.keyword, ch.arg)
-        idx += 1
 
     # Short ("case-less") version
     #  https://tools.ietf.org/html/rfc6020#section-7.9.2
     for ch in stmt.substmts:
         logging.debug("checking on keywords with: %s %s", ch.keyword, ch.arg)
         if ch.keyword in ["container", "leaf", "list", "leaf-list"]:
-            res[arg]["oneOf"].append(dict())
             logging.debug("keyword hit on (short version): %s %s", ch.keyword, ch.arg)
-            res[arg]["oneOf"][idx].update(PRODUCERS[ch.keyword](ch))
-        idx += 1
+            oneOfs.append(PRODUCERS[ch.keyword](ch))
+
+    res[arg]["oneOf"] = oneOfs
     return res
 
 PRODUCERS = {
