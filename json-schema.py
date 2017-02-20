@@ -123,17 +123,14 @@ def produce_list(stmt):
             else:
                 logging.debug("keyword miss on: %s %s", s.keyword, s.arg)
 
-    if stmt.parent.keyword != "list":
-        res = {arg:
-               {"type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": children
-                }
-                }
-               }
-    else:
-        res = {"type": "object", "properties": {arg: {"type": "array", "items": children}}}
+    res = {arg:
+           {"type": "array",
+            "items": {
+                "type": "object",
+                "properties": children
+            }
+            }
+           }
     logging.debug("In produce_list for %s, returning %s", stmt.arg, res)
     return res
 
