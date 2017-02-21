@@ -153,27 +153,30 @@ def produce_leaf(stmt):
 
     return {arg: type_str}
 
+
 def produce_list(stmt):
     logging.debug("in produce_list: %s %s", stmt.keyword, stmt.arg)
     arg = qualify_name(stmt)
 
-    if stmt.parent.keyword != "list":
-        result = {arg: {"type": "array", "items": []}}
-    else:
-        result = {"type": "object", "properties": {arg: {"type": "array", "items": []}}}
-
+    children = {}
     if hasattr(stmt, 'i_children'):
-        for child in stmt.i_children:
-            if child.keyword in producers:
-                logging.debug("keyword hit on: %s %s", child.keyword, child.arg)
-                if stmt.parent.keyword != "list":
-                    result[arg]["items"].append(producers[child.keyword](child))
-                else:
-                    result["properties"][arg]["items"].append(producers[child.keyword](child))
+        for s in stmt.i_children:
+            if s.keyword in producers:
+                logging.debug("keyword hit on: %s %s", s.keyword, s.arg)
+                children.update(producers[s.keyword](s))
             else:
-                logging.debug("keyword miss on: %s %s", child.keyword, child.arg)
-    logging.debug("In produce_list for %s, returning %s", stmt.arg, result)
-    return result
+                logging.debug("keyword miss on: %s %s", s.keyword, s.arg)
+
+    res = {arg:
+           {"type": "array",
+            "items": {
+                "type": "object",
+                "properties": children
+            }
+            }
+           }
+    logging.debug("In produce_list for %s, returning %s", stmt.arg, res)
+    return res
 
 def produce_leaf_list(stmt):
     logging.debug("in produce_leaf_list: %s %s", stmt.keyword, stmt.arg)
@@ -212,35 +215,34 @@ def produce_container(stmt):
     logging.debug("In produce_container, returning %s", result)
     return result
 
+
 def produce_choice(stmt):
     logging.debug("in produce_choice: %s %s", stmt.keyword, stmt.arg)
     arg = qualify_name(stmt)
 
     # https://tools.ietf.org/html/rfc6020#section-7.9.2
-    result = {arg: {"oneOf": []}}
+    res = {arg: {"oneOf": []}}
 
-    idx = 0
+    oneOfs = []
     for case in stmt.search("case"):
-        result[arg]["oneOf"].append(dict())
         if hasattr(case, 'i_children'):
-            for child in case.i_children:
-                if child.keyword in producers:
-                    logging.debug("keyword hit on (long version): %s %s", child.keyword, child.arg)
-                    result[arg]["oneOf"][idx].update(producers[child.keyword](child))
+            for ch in case.i_children:
+                if ch.keyword in producers:
+                    logging.debug("keyword hit on (long version): %s %s", ch.keyword, ch.arg)
+                    oneOfs.append(producers[ch.keyword](ch))
                 else:
-                    logging.debug("keyword miss on: %s %s", child.keyword, child.arg)
-        idx += 1
+                    logging.debug("keyword miss on: %s %s", ch.keyword, ch.arg)
 
     # Short ("case-less") version
     #  https://tools.ietf.org/html/rfc6020#section-7.9.2
-    for child in stmt.substmts:
-        logging.debug("checking on keywords with: %s %s", child.keyword, child.arg)
-        if child.keyword in ["container", "leaf", "list", "leaf-list"]:
-            result[arg]["oneOf"].append(dict())
-            logging.debug("keyword hit on (short version): %s %s", child.keyword, child.arg)
-            result[arg]["oneOf"][idx].update(producers[child.keyword](child))
-        idx += 1
-    return result
+    for ch in stmt.substmts:
+        logging.debug("checking on keywords with: %s %s", ch.keyword, ch.arg)
+        if ch.keyword in ["container", "leaf", "list", "leaf-list"]:
+            logging.debug("keyword hit on (short version): %s %s", ch.keyword, ch.arg)
+            oneOfs.append(producers[ch.keyword](ch))
+
+    res[arg]["oneOf"] = oneOfs
+    return res
 
 producers = {
     # "module":     produce_module,
@@ -314,7 +316,7 @@ def instance_identifier_trans(stmt):
 
 def leafref_trans(stmt):
     logging.debug("in leafref_trans with stmt %s %s", stmt.keyword, stmt.arg)
-    # TODO: Need to resolve i_leafref_ptr here 
+    # TODO: Need to resolve i_leafref_ptr here
     result = {"type": "string"}
     return result
 
