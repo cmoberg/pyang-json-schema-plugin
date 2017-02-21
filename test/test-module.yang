@@ -1,4 +1,5 @@
 module test-module {
+
 	namespace "urn:tester:one";
 	prefix "tmo";
 
@@ -14,6 +15,17 @@ module test-module {
 		description "initial";
 		reference "testing";
 	}
+
+	typedef percent {
+		type uint8 {
+			range "0 .. 100";
+		}
+		description "Percentage";
+	}
+
+    typedef name {
+        type string;
+    }
 
 	container topcontainer {
 		container simplecontainer {
@@ -45,13 +57,13 @@ module test-module {
 		}
 
 		choice shallowchoice {
-			container firstcase {
-				leaf firstcaseleaf {
+			container erstcase {
+				leaf erstcaseleaf {
 					type string;
 				}
 			}
-			container second {
-				leaf seondcaseleaf {
+			container zwei {
+				leaf zweicaseleaf {
 					type string;
 				}
 			}
@@ -67,6 +79,11 @@ module test-module {
 
 				description "";
 
+                leaf aleafref {
+                    type leafref {
+                        path "./first";
+                    }
+                }
 
 				leaf first {
 					type string;
@@ -196,6 +213,14 @@ module test-module {
 			}
 		}
 
+		leaf typedefleaf {
+			type percent;
+		}
+
+        leaf typedefleaftwo {
+            type name;
+        }
+
 		leaf enumtest {
 			type enumeration {
 				enum frib;
@@ -203,5 +228,14 @@ module test-module {
 				enum frab;			
 			}
 		}
+        leaf-list sneakyleaflist {
+            type enumeration {
+                enum fee;
+                enum fie;
+                enum foe;
+                enum fum;
+            }
+        }
+
 	}
 }
