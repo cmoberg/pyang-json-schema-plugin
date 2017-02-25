@@ -1,0 +1,40 @@
+{
+  "test-module:topcontainer": {
+    "simplecontainer": {
+      "simpleleaf": "frrooom"
+    },
+    "secondcontainer": {
+      "secondcaseleaf": "fribb"
+    },
+    "topsecondcaseleaf": "fantom",
+    "erstcase": {
+      "erstcaseleaf": "follow"
+    },
+    "typetester": {
+      "tint8": 8,
+      "tuint8": 4,
+      "tint16": 256,
+      "tuint16": 356,
+      "tint32": 10000,
+      "tuint32": 1000,
+      "tint64": 32000,
+      "tuint64": 32000
+    },
+    "aleaflist": ["frobb", "mjau"],
+    "topleaf": "katten",
+    "abitleaf": "secondbit",
+    "usescontainer": {
+      "test-import-module:abc": {
+        "apa": "mrrm",
+        "snorp": "froom"
+      }
+    },
+    "abooleanleaf": true,
+    "anemptyleaf": [null],
+    "aunion": 8,
+    "typedefleaf": 49,
+    "typedefleaftwo": "strumpa",
+    "enumtest": "frab",
+    "sneakyleaflist": ["foe", "fum"]
+  }
+}

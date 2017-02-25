@@ -49,7 +49,7 @@ class JSONSchemaPlugin(plugin.PyangPlugin):
         root_stmt = modules[0]
         if ctx.opts.schema_debug:
             logging.basicConfig(level=logging.DEBUG)
-
+            print("")
         if ctx.opts.schema_path is not None:
             logging.debug("schema_path: %s", ctx.opts.schema_path)
             path = ctx.opts.schema_path
@@ -191,7 +191,7 @@ def produce_leaf_list(stmt):
     return result
 
 def produce_container(stmt):
-    logging.debug("in produce_container: %s %s %s", stmt.keyword, stmt.arg, stmt.i_module.arg)
+    logging.debug("in produce_container: %s %s", stmt.keyword, stmt.arg)
     arg = qualify_name(stmt)
 
     if stmt.parent.keyword != "list":
@@ -214,32 +214,28 @@ def produce_container(stmt):
 
 def produce_choice(stmt):
     logging.debug("in produce_choice: %s %s", stmt.keyword, stmt.arg)
-    arg = qualify_name(stmt)
+
+    result = {}
 
     # https://tools.ietf.org/html/rfc6020#section-7.9.2
-    result = {arg: {"oneOf": []}}
-
-    idx = 0
     for case in stmt.search("case"):
-        result[arg]["oneOf"].append(dict())
         if hasattr(case, 'i_children'):
             for child in case.i_children:
                 if child.keyword in producers:
                     logging.debug("keyword hit on (long version): %s %s", child.keyword, child.arg)
-                    result[arg]["oneOf"][idx].update(producers[child.keyword](child))
+                    result.update(producers[child.keyword](child))
                 else:
                     logging.debug("keyword miss on: %s %s", child.keyword, child.arg)
-        idx += 1
 
     # Short ("case-less") version
     #  https://tools.ietf.org/html/rfc6020#section-7.9.2
     for child in stmt.substmts:
         logging.debug("checking on keywords with: %s %s", child.keyword, child.arg)
         if child.keyword in ["container", "leaf", "list", "leaf-list"]:
-            result[arg]["oneOf"].append(dict())
             logging.debug("keyword hit on (short version): %s %s", child.keyword, child.arg)
-            result[arg]["oneOf"][idx].update(producers[child.keyword](child))
-        idx += 1
+            result.update(producers[child.keyword](child))
+
+    logging.debug("In produce_choice, returning %s", result)
     return result
 
 producers = {

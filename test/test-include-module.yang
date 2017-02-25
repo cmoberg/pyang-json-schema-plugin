@@ -1,5 +1,4 @@
-module  {
-
+module test-include-module {
     namespace "urn:include-module";
     prefix incl;
 

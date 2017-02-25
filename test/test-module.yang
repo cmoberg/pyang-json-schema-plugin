@@ -1,5 +1,4 @@
 module test-module {
-
 	namespace "urn:tester:one";
 	prefix "tmo";
 
@@ -36,26 +35,6 @@ module test-module {
 			}
 		}
 
-		choice achoice {
-			case firstcasecase {
-				container firstcase {
-					leaf firstcaseleaf {
-						type string;
-					}
-				}
-			}
-			case secondcasecase {
-				container second {
-					leaf secondcaseleaf {
-						type string;
-					}
-				}
-				leaf topsecondcaseleaf {
-					type string;
-				}
-			}
-		}
-
 		choice shallowchoice {
 			container erstcase {
 				leaf erstcaseleaf {
@@ -72,6 +51,26 @@ module test-module {
 			}
 		}
 
+        choice achoice {
+            case firstcasecase {
+                container firstcase {
+                    leaf firstcaseleaf {
+                        type string;
+                    }
+                }
+            }
+            case secondcasecase {
+                container secondcontainer {
+                    leaf secondcaseleaf {
+                        type string;
+                    }
+                }
+                leaf topsecondcaseleaf {
+                    type string;
+                }
+            }
+        }
+
 		container maincontainer {
 			description "";		
 			list mainlist {
@@ -81,7 +80,7 @@ module test-module {
 
                 leaf aleafref {
                     type leafref {
-                        path "./first";
+                        path "../first";
                     }
                 }
 
