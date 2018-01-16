@@ -20,18 +20,18 @@ def pyang_plugin_init():
 
 class JSONSchemaPlugin(plugin.PyangPlugin):
     def add_output_format(self, fmts):
-        fmts['json-schema'] = self
+        fmts['jsonschema'] = self
 
     def add_opts(self, optparser):
         optlist = [
-            optparse.make_option('--json-schema-debug',
+            optparse.make_option('--jsonschema-debug',
                                  dest='schema_debug',
                                  action="store_true",
                                  help='JSON Schema debug'),
-            optparse.make_option('--json-schema-path',
+            optparse.make_option('--jsonschema-path',
                                  dest='schema_path',
                                  help='JSON Schema path'),
-            optparse.make_option('--json-schema-title',
+            optparse.make_option('--jsonschema-title',
                                  dest='schema_title',
                                  help='JSON Schema title'),
             ]
