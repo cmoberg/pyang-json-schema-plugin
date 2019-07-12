@@ -13,7 +13,7 @@ setup(
     author='Carl Moberg',
     author_email='camoberg@cisco.com',
     license='New-style BSD',
-    url='https://github.com/cmoberg/pyang-jsontree-plugin',
+    url='https://github.com/cmoberg/pyang-json-schema-plugin',
     install_requires=['pyang'],
     include_package_data=True,
     keywords=['yang', 'extraction', 'jsonschema'],
