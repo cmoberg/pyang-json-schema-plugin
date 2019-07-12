@@ -4,7 +4,8 @@ This is a pyang JSON Schema output plugin. It takes YANG files and tries to prod
 
 Here's an example when running from the `test` directory:
 ```
-$ pyang --plugindir ../ -f json-schema ./test-module.yang > test-module.jsonschema
+$ cd test/
+$ pyang --plugindir ../ -f jsonschema ./test-module.yang > test-module.jsonschema
 ```
 
 You can then validate the generated schema using e.g. the [tv4](https://github.com/geraintluff/tv4) tool like so:
