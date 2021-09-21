@@ -139,7 +139,7 @@ def produce_type(type_stmt):
         type_str = typedef_type
     else:
         logging.debug("Missing mapping of: %s %s",
-                      type_stmt.keyword, type_stmt.arg, type_stmt.i_typede)
+                      type_stmt.keyword, type_stmt.arg, type_stmt.i_typedef)
         type_str = {"type": "string"}
     return type_str
 
